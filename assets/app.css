@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+    themes: cupcake --default;
+}
+@plugin "daisyui/theme" {
+    name: "cupcake";
+    default: true;
+    --color-primary-content: #122b27;
+    --color-secondary-content: #4a1724;
+    --color-accent-content: #53180e;
+    --color-warning-content: #4a3911;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+.hover-effect {
+    @apply hover:border-primary hover:bg-primary hover:scale-110 hover:text-primary-content transition duration-300 ease-in-out cursor-pointer;
+}
+
+.hover-effect-img {
+    @apply hover:border-primary hover:opacity-75 hover:scale-105 transition duration-300 ease-in-out cursor-pointer;
+}
