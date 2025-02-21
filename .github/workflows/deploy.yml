@@ -1,0 +1,47 @@
+name: Deploy to GitHub Pages
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout do código
+              uses: actions/checkout@v4
+
+            - name: Habilitar corepack
+              run: corepack enable
+
+            - name: Configurar Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+
+            - name: Instalar dependências
+              run: npm install
+
+            - name: Build do projeto para GitHub Pages
+              run: NUXT_APP_BASE_URL=/gear-tur/ npx nuxt build --preset github_pages
+
+            - name: Upload dos arquivos gerados
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: ./.output/public
+
+    deploy:
+        needs: build
+        permissions:
+            pages: write
+            id-token: write
+        environment:
+            name: github_pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Deploy para GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4
