@@ -114,7 +114,9 @@
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
-gsap.registerPlugin(ScrollToPlugin);
+onMounted(() => {
+    gsap.registerPlugin(ScrollToPlugin);
+})
 
 const isMenuOpen = ref(false);
 
