@@ -4,10 +4,12 @@
         <div class="w-full h-96 overflow-hidden rounded-t-md">
             <Splide :options="splideOptions" class="w-full">
                 <SplideSlide v-for="num in 3" :key="num">
-                    <img
+                    <NuxtImg
                         :src="`/pics/trilhas-imgs/${folder}/${folder}-${num}.jpg`"
-                        :alt="`${title}`"
+                        :alt="title"
                         loading="lazy"
+                        format="webp"
+                        densities="x1 x2"
                         class="w-full h-96 object-cover"
                     />
                 </SplideSlide>
