@@ -315,12 +315,14 @@
             <div
                 class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-8"
             >
-                <img
+                <NuxtImg
                     v-for="i in totalImages"
                     :key="i"
                     :src="`/pics/galeria/galeria-${i}.jpg`"
                     :alt="`Galeria ${i}`"
                     loading="lazy"
+                    format="webp"
+                    densities="x1 x2"
                     class="w-md h-60 object-cover rounded-md shadow-lg cursor-pointer hover-effect-img"
                     @click="openModal(i)"
                 />
