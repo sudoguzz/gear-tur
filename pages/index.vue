@@ -260,6 +260,8 @@
                     :price="trilha.price"
                     :folder="trilha.folder"
                     :discount="trilha.discount"
+                    :min-people="trilha.minPeople"
+                    :max-people="trilha.maxPeople"
                     :ref="(el) => registerTrilhaCard(el)"
                 />
             </div>
@@ -479,12 +481,12 @@ const isMenuOpen = ref(false);
 
 // Lista de trilhas como dados
 const trilhas = ref([
-    { title: "Agrofloresta Umbuzeiro", price: "45,00", folder: "Agro", discount: "10%" },
+    { title: "Agrofloresta Umbuzeiro", price: "45,00", folder: "Agro", discount: "10%", minPeople: "5", maxPeople: "20" },
     { title: "Casa da Roça Dona Bela", price: "45,00", folder: "Bela", discount: "5%" },
     { title: "Trilha Morro do Cruzeiro", price: "60,00", folder: "Cruz" },
     { title: "Trilha Cachoeira do Lajedão", price: "60,00", folder: "Laj" },
     { title: "Trilha Morro da Loucura", price: "60,00", folder: "Louc" },
-    { title: "Sítio Frutos do Sertão", price: "45,00", folder: "Sert", discount: "5%" },
+    { title: "Sítio Frutos do Sertão", price: "45,00", folder: "Sert", discount: "5%", minPeople: "5", maxPeople: "20" },
 ]);
 
 // Função para registrar os componentes TrilhaCard

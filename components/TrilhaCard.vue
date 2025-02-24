@@ -41,12 +41,15 @@
                         <input
                             type="number"
                             v-model="peopleCount"
-                            min="5"
-                            max="20"
+                            :min="minPeople"
+                            :max="hasMinMax ? maxPeople : undefined"
                             class="input input-bordered w-20 focus:outline-none quantidade"
                         />
-                        Selecione quantas pessoas <br />
-                        (Mínimo 5, Máximo 20)
+                        Quant. Pessoas
+                        <br v-if="hasMinMax" />
+                        <span v-if="hasMinMax">
+                            (Mínimo {{ minPeople }}, Máximo {{ maxPeople }})
+                        </span>
                     </label>
                 </fieldset>
             </div>
@@ -55,7 +58,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { Splide, SplideSlide } from "@splidejs/vue-splide";
 import "@splidejs/vue-splide/css";
 
@@ -76,10 +79,23 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    minPeople: {
+        type: String,
+        default: null,
+    },
+    maxPeople: {
+        type: String,
+        default: null,
+    },
 });
 
-const peopleCount = ref(5);
+const peopleCount = ref(props.minPeople || 1); // Default para 1 se não houver minPeople
 const isSelected = ref(false);
+
+// Verifica se há limites definidos
+const hasMinMax = computed(() => !!props.minPeople || !!props.maxPeople);
+const minPeople = computed(() => props.minPeople || "1"); // Default mínimo 1 apenas para exibição
+const maxPeople = computed(() => props.maxPeople || "Infinity"); // Sem limite máximo efetivo
 
 const splideOptions = {
     type: "loop",
@@ -95,7 +111,7 @@ defineExpose({
     isSelected,
     peopleCount,
     title: props.title,
-    price: props.price
+    price: props.price,
 });
 </script>
 
