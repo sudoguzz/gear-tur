@@ -248,51 +248,22 @@
         </section>
 
         <!-- Passeios Section -->
-        <section
-            id="passeios"
-            class="flex flex-col place-items-center py-15 px-2"
-        >
+        <section id="passeios" class="flex flex-col place-items-center py-15 px-2">
             <h2 class="text-4xl md:text-5xl text-center mb-15 font-bold">
                 Selecione as trilhas e passeios desejados:
             </h2>
-            <div
-                class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-8"
-            >
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-8">
                 <TrilhaCard
-                    title="Agrofloresta Umbuzeiro"
-                    price="45,00"
-                    folder="Agro"
-                    discount="10%"
-                />
-                <TrilhaCard
-                    title="Casa da Roça Dona Bela"
-                    price="45,00"
-                    folder="Bela"
-                    discount="5%"
-                />
-                <TrilhaCard
-                    title="Trilha Morro do Cruzeiro"
-                    price="60,00"
-                    folder="Cruz"
-                />
-                <TrilhaCard
-                    title="Trilha Cachoeira do Lajedão"
-                    price="60,00"
-                    folder="Laj"
-                />
-                <TrilhaCard
-                    title="Trilha Morro da Loucura"
-                    price="60,00"
-                    folder="Louc"
-                />
-                <TrilhaCard
-                    title="Sítio Frutos do Sertão"
-                    price="45,00"
-                    folder="Sert"
-                    discount="5%"
+                    v-for="(trilha, index) in trilhas"
+                    :key="index"
+                    :title="trilha.title"
+                    :price="trilha.price"
+                    :folder="trilha.folder"
+                    :discount="trilha.discount"
+                    :ref="(el) => registerTrilhaCard(el)"
                 />
             </div>
-            <button class="btn btn-primary btn-lg mt-15">
+            <button class="btn btn-primary btn-lg mt-15" @click="enviarWhatsApp">
                 <Icon name="ri:whatsapp-line" size="20" />
                 Enviar para o Whatsapp
             </button>
@@ -499,14 +470,33 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
+const trilhaCards = ref([]);
 const isMenuOpen = ref(false);
+
+// Lista de trilhas como dados
+const trilhas = ref([
+    { title: "Agrofloresta Umbuzeiro", price: "45,00", folder: "Agro", discount: "10%" },
+    { title: "Casa da Roça Dona Bela", price: "45,00", folder: "Bela", discount: "5%" },
+    { title: "Trilha Morro do Cruzeiro", price: "60,00", folder: "Cruz" },
+    { title: "Trilha Cachoeira do Lajedão", price: "60,00", folder: "Laj" },
+    { title: "Trilha Morro da Loucura", price: "60,00", folder: "Louc" },
+    { title: "Sítio Frutos do Sertão", price: "45,00", folder: "Sert", discount: "5%" },
+]);
+
+// Função para registrar os componentes TrilhaCard
+function registerTrilhaCard(el) {
+    if (el && !trilhaCards.value.includes(el)) {
+        trilhaCards.value.push(el);
+    }
+}
 
 onMounted(() => {
     gsap.registerPlugin(ScrollToPlugin);
-})
+});
 
 function scrollToSection(sectionId) {
     const target = document.getElementById(sectionId);
@@ -522,6 +512,34 @@ function scrollToSection(sectionId) {
     }
 }
 
+function enviarWhatsApp() {
+    let trilhasSelecionadas = [];
+    let total = 0;
+
+    trilhaCards.value.forEach(card => {
+        if (card && card.isSelected) {
+            const nome = card.title;
+            const quantidade = card.peopleCount;
+            const valor = parseFloat(card.price.replace(',', '.'));
+            const subtotal = quantidade * valor;
+            total += subtotal;
+            trilhasSelecionadas.push(`${nome} (Quantidade: ${quantidade}) - R$${subtotal.toFixed(2)}`);
+        }
+    });
+
+    if (trilhasSelecionadas.length === 0) {
+        alert("Selecione pelo menos uma trilha ou passeio!");
+        return;
+    }
+
+    const mensagem = `Olá, gostaria de reservar os seguintes passeios:\n- ${trilhasSelecionadas.join("\n- ")}\n\nTotal: R$${total.toFixed(2)}`;
+    const numeroWhatsApp = "5579999830418";
+    const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+
+    window.open(url, "_blank");
+}
+
+// Restante do script (galeria, etc.)
 const totalImages = 16;
 const modalOpen = ref(false);
 const currentIndex = ref(0);
@@ -536,14 +554,10 @@ const closeModal = () => {
 };
 
 const prevImage = () => {
-    if (currentIndex.value > 1) {
-        currentIndex.value--;
-    }
+    if (currentIndex.value > 1) currentIndex.value--;
 };
 
 const nextImage = () => {
-    if (currentIndex.value < totalImages) {
-        currentIndex.value++;
-    }
+    if (currentIndex.value < totalImages) currentIndex.value++;
 };
 </script>

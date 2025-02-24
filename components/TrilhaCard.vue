@@ -1,6 +1,5 @@
 <template>
     <div class="card max-w-md h-[660px] bg-base-100 shadow-xl flex flex-col">
-        <!-- Carousel -->
         <div class="w-full h-96 overflow-hidden rounded-t-md">
             <Splide :options="splideOptions" class="w-full">
                 <SplideSlide v-for="num in 3" :key="num">
@@ -16,20 +15,15 @@
             </Splide>
         </div>
 
-        <!-- Conteudo -->
         <div class="card-body flex-1 flex flex-col">
-            <h2
-                class="card-title text-xl font-bold overflow-hidden line-clamp-2 text-clip"
-            >
+            <h2 class="card-title text-xl font-bold overflow-hidden line-clamp-2 text-clip">
                 {{ title }}
             </h2>
             <div class="flex items-center justify-center mb-3">
                 <p class="text-lg font-semibold">R$ {{ price }} por pessoa</p>
-                <span
-                    v-if="discount"
-                    class="badge badge-soft badge-warning text-warning-content lg:text-sm sm:text-xs text-nowrap"
-                    >Desconto {{ discount }}</span
-                >
+                <span v-if="discount" class="badge badge-soft badge-warning text-warning-content lg:text-sm sm:text-xs text-nowrap">
+                    Desconto {{ discount }}
+                </span>
             </div>
             <div class="mt-auto">
                 <fieldset class="fieldset flex flex-col place-items-start">
@@ -37,6 +31,9 @@
                         <input
                             type="checkbox"
                             class="checkbox checked:bg-primary"
+                            :data-nome="title"
+                            :data-valor="price.replace(',', '.')"
+                            v-model="isSelected"
                         />
                         Selecionar este pacote
                     </label>
@@ -46,7 +43,7 @@
                             v-model="peopleCount"
                             min="5"
                             max="20"
-                            class="input input-bordered w-20 focus:outline-none"
+                            class="input input-bordered w-20 focus:outline-none quantidade"
                         />
                         Selecione quantas pessoas <br />
                         (Mínimo 5, Máximo 20)
@@ -82,6 +79,7 @@ const props = defineProps({
 });
 
 const peopleCount = ref(5);
+const isSelected = ref(false);
 
 const splideOptions = {
     type: "loop",
@@ -91,6 +89,14 @@ const splideOptions = {
     pauseOnHover: true,
     gap: "0rem",
 };
+
+// Expor valores para o componente pai
+defineExpose({
+    isSelected,
+    peopleCount,
+    title: props.title,
+    price: props.price
+});
 </script>
 
 <style>
